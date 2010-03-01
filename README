@@ -1,0 +1,183 @@
+NAME
+    Data::Google::Visualization::DataTable - Easily create Google DataTable
+    objects
+
+DESCRIPTION
+    Easily create Google DataTable objects without worrying too much about
+    typed data
+
+OVERVIEW
+    Google's excellent Visualization suite requires you to format your
+    Javascript data very carefully. It's entirely possible to do this by
+    hand, especially with the help of the most excellent JSON::XS but it's a
+    bit fiddly, largely because Perl doesn't natively support data types and
+    Google's API accepts a super-set of JSON.
+
+    This module is attempts to hide the gory details of preparing your data
+    before sending it to a JSON serializer - more specifically, hiding some
+    of the hoops that have to be jump through for making sure your data
+    serializes to the right data types.
+
+    More about the <Google Visualization API>.
+
+    Every effort has been made to keep naming conventions as close as
+    possible to those in the API itself.
+
+    To use this module, a reasonable knowledge of Perl is assumed. You
+    should be familiar with Perl references and Perl objects.
+
+SYNOPSIS
+     use Data::Google::Visualization::DataTable;
+
+     my $datatable = Data::Google::Visualization::DataTable->new();
+
+     $datatable->add_columns(
+            { id => 'date',     label => "A Date",        type => 'date', p => {}},
+            { id => 'datetime', label => "A Datetime",    type => 'datetime' },
+            { id => 'timeofday',label => "A Time of Day", type => 'timeofday' },
+            { id => 'bool',     label => "True or False", type => 'boolean' },
+            { id => 'number',   label => "Number",        type => 'number' },
+            { id => 'string',   label => "Some String",   type => 'string' },
+     );
+
+     $datatable->add_rows(
+
+     # Add as array-refs
+            [
+                    { v => DateTime->new() },
+                    { v => Time::Piece->new(), f => "Right now!" },
+                    { v => [6, 12, 1], f => '06:12:01' },
+                    { v => 1, f => 'YES' },
+                    15.6, # If you're getting lazy
+                    { v => 'foobar', f => 'Foo Bar', p => { display => 'none' } },
+            ],
+
+     # And/or as hash-refs (but only if you defined id's for each of your columns)
+            {
+                    date      => DateTime->new(),
+                    datetime  => { v => Time::Piece->new(), f => "Right now!" },
+                    timeofday => [6, 12, 1],
+                    bool      => 1,
+                    number    => 15.6,
+                    string    => { v => 'foobar', f => 'Foo Bar' },
+            },
+
+     );
+
+     # Get the data...
+
+     # Fancy-pants
+     my $output = $self->output_json(
+            columns => ['date','number','string' ],
+            pretty  => 1,
+     );
+
+     # Vanilla
+     my $output = $self->output_json();
+
+COLUMNS, ROWS AND CELLS
+    We've tried as far as possible to stay as close as possible to the
+    underlying API, so make sure you've had a good read of: <Google
+    Visualization API>.
+
+  Columns
+    *Columns* are specified using a hashref, and follow exactly the format
+    of the underlying API itself. All of "type", "id", "label", "pattern",
+    and "p" are supported. The contents of "p" will be passed directly to
+    JSON::XS to serialize as a whole.
+
+  Rows
+    A row is either a hash-ref where the keys are column IDs and the values
+    are *cells*, or an array-ref where the values are *cells*.
+
+  Cells
+    *Cells* can be specified in several ways, but the best way is using a
+    hash-ref that exactly conforms to the API. "v" is NOT checked against
+    your data type - but we will attempt to convert it. "f" needs to be a
+    string if you provide it. "p" will be bassed directly to JSON::XS.
+
+    For any of the date-like fields ("date", "datetime", "timeofday"), you
+    can pass in 4 types of values. We accept DateTime objects, Time::Piece
+    objects, epoch seconds (as a string - converted internally using
+    localtime), or an array-ref of values that will be passed directly to
+    the resulting Javascript Date object eg:
+
+     Perl:
+      date => [ 5, 4, 3 ]
+     JS:
+      new Date( 5, 4, 3 )
+
+    Remember that JS dates 0-index the month.
+
+    For non-date fields, if you specify a cell using a string or number,
+    rather than a hashref, that'll be mapped to a cell with "v" set to the
+    string you specified.
+
+    "boolean": we test the value you pass in for truth, the Perl way.
+
+METHODS
+  new
+    Constructor. Accepts no arguments, returns a new object.
+
+  add_columns
+    Accepts zero or more columns, in the format specified above, and adds
+    them to our list of columns. Returns the object. You can't call this
+    method after you've called "add_rows" for the first time.
+
+  add_rows
+    Accepts zero or more rows, either as a list of hash-refs or a list of
+    array-refs. If you've provided hash-refs, we'll map the key name to the
+    column via its ID (you must have given every column an ID if you want to
+    do this, or it'll cause a fatal error).
+
+    If you've provided array-refs, we'll assume each cell belongs in
+    subsequent columns - your array-ref must have the same number of members
+    as you have set columns.
+
+  pedantic
+    We do some data checking for sanity, and we'll issue warnings about
+    things the API considers bad data practice - using reserved words or
+    fancy characters on IDs so far. If you don't want that, simple say:
+
+     $object->pedantic(0);
+
+    Defaults to true.
+
+  json_xs_object
+    You may want to configure your JSON::XS object in some magical way. This
+    is a read/write accessor to it. If you didn't understand that, or why
+    you'd want to do that, you can ignore this method.
+
+  output_json
+    Returns a JSON serialization of your object. You can optionally specify
+    two parameters:
+
+    "pretty" - *bool* - defaults to false - that specifies if you'd like
+    your JSON spread-apart with whitespace. Useful for debugging.
+
+    "columns" - *array-ref of strings* - pick out certain columns only (and
+    in the order you specify). If you don't provide an argument here, we'll
+    use them all and in the order set in "add_columns".
+
+BUG BOUNTY
+    Find a reproducible bug, file a bug report, and I (Peter Sergeant) will
+    donate $10 to The Perl Foundation (or Wikipedia). Feature Requests are
+    not bugs :-) Offer subject to author's discretion...
+
+AUTHOR
+    Peter Sergeant "pete@clueball.com" on behalf of <Investor Dynamics> -
+    *Letting you know what your market is thinking*.
+
+SEE ALSO
+    <Python library that does the same thing>
+
+    JSON::XS - The underlying module
+
+    <Google Visualization API>.
+
+COPYRIGHT
+    Copyright 2010 Investor Dynamics Ltd, some rights reserved.
+
+    This program is free software; you can redistribute it and/or modify it
+    under the same terms as Perl itself.
+
