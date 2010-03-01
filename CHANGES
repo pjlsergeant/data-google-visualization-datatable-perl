@@ -1,3 +1,5 @@
+0.02  Mon Mar 01 13:15:00 2010
+	- META.yml is now required by the indexer. Who knew?
 0.01	Mon Mar 01 12:50:00 2010
 	- Initial release
 

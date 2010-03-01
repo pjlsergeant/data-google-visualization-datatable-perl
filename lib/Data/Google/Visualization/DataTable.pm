@@ -8,7 +8,7 @@ use Storable qw(dclone);
 use JSON::XS;
 use Time::Local;
 
-our $VERSION = '0.01';
+our $VERSION = '0.02';
 
 =head1 NAME
 
@@ -182,7 +182,7 @@ our %JAVASCRIPT_RESERVED = map { $_ => 1 } qw(
 sub add_columns {
 	my ($self, @columns) = @_;
 
-	die "You can't add columns once you've added rows" if @{$self->{'rows'}};
+	croak "You can't add columns once you've added rows" if @{$self->{'rows'}};
 
 	# Add the columns to our internal store
 	for my $column ( @columns ) {
@@ -210,7 +210,7 @@ sub add_columns {
 		if ( $column->{'id'} ) {
 			my $id = $column->{'id'};
 			if ( grep { $id eq $_->{'id'} } @{ $self->{'columns'} } ) {
-				die "We already have a column with the id '$id'";
+				croak "We already have a column with the id '$id'";
 			}
 		}
 
