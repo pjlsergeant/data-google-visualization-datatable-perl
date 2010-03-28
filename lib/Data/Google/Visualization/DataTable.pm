@@ -8,8 +8,6 @@ use Storable qw(dclone);
 use JSON::XS;
 use Time::Local;
 
-our $VERSION = '0.03';
-
 =head1 NAME
 
 Data::Google::Visualization::DataTable - Easily create Google DataTable objects
