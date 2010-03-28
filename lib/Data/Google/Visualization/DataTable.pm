@@ -8,7 +8,7 @@ use Storable qw(dclone);
 use JSON::XS;
 use Time::Local;
 
-our $VERSION = '0.02';
+our $VERSION = '0.03';
 
 =head1 NAME
 
@@ -242,6 +242,7 @@ sub add_columns {
 	for my $column ( @{ $self->{'columns'} } ) {
 
 		# Encode as JSON
+		delete $column->{'json'};
 		my $column_json = $self->json_xs_object->encode( $column );
 		$column->{'json'} = $column_json;
 
