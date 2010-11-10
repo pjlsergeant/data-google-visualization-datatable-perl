@@ -360,8 +360,12 @@ sub add_rows {
 				$cell->{'f'} .= '';
 			}
 
+			# Handle null/undef
+			if ( ! defined($cell->{'v'}) ) {
+				push(@cells, 'null');
+
 			# Convert boolean
-			if ( $type eq 'boolean' ) {
+			} elsif ( $type eq 'boolean' ) {
 				$cell->{'v'} = $cell->{'v'} ? \1 : \0;
 				push(@cells, $self->json_xs_object->encode( $cell ) );
 
