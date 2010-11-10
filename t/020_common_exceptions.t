@@ -9,8 +9,6 @@ use Scalar::Util qw(weaken);
 BEGIN {
 	eval "use Test::Exception";
 	plan skip_all => "Test::Exception needed for these tests" if $@;
-	eval "use Test::Warn";
-	plan skip_all => "Test::Warn needed for these tests" if $@;
 }
 
 plan tests => 9;

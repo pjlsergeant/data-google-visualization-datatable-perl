@@ -2,6 +2,7 @@
 
 use strict;
 use warnings;
+use Test::Warn;
 use Data::Google::Visualization::DataTable;
 
 use Test::More tests => 1;
@@ -29,9 +30,11 @@ $datatable->add_rows(
 	},
 );
 
+$datatable->add_rows({ number => 0 });
+$datatable->add_rows([ undef, 1 ]);
+
 is(
 	$datatable->output_json(),
-	q!{"cols": [{"id":"bool","label":"True or False","type":"boolean"},{"id":"number","label":"Number","type":"number"},{"id":"string","label":"Some String","p":{"display":"none"},"type":"string"}],"rows": [{"c":[{"f":"YES","v":null},{"v":null},{"v":null}]},{"c":[{"v":null},{"v":null},{"f":"Foo Bar","v":null}]}]}!,
-	"Compact JSON rendering matches"
+	q!{"cols": [{"id":"bool","label":"True or False","type":"boolean"},{"id":"number","label":"Number","type":"number"},{"id":"string","label":"Some String","p":{"display":"none"},"type":"string"}],"rows": [{"c":[{"f":"YES","v":null},{"v":null},{"v":null}]},{"c":[{"v":null},{"v":null},{"f":"Foo Bar","v":null}]},{"c":[{"v":null},{"v":0},{"v":null}]},{"c":[{"v":null},{"v":1},{"v":null}]}]}!
 );
 
