@@ -362,7 +362,7 @@ sub add_rows {
 
 			# Handle null/undef
 			if ( ! defined($cell->{'v'}) ) {
-				push(@cells, 'null');
+				push(@cells, $self->json_xs_object->encode( $cell ) );
 
 			# Convert boolean
 			} elsif ( $type eq 'boolean' ) {
@@ -510,7 +510,7 @@ sub output_json {
 	# Rows
 	my @rows = map {
 		my $individual_row_string = join ',' .$n.$t.$t.$t, @$_;
-		'{ "c":[' .$n.$t.$t.$t. $individual_row_string .$n.$t.$t. ']}';
+		'{"c":[' .$n.$t.$t.$t. $individual_row_string .$n.$t.$t. ']}';
 	} @$rows;
 	my $rows_string = join ',' . $n . $t . $t, @rows;
 

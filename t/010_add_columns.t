@@ -38,12 +38,12 @@ is(
         {"id":"string","label":"Some String","p":{"display":"none"},"type":"string"}
     ],
     "rows": [
-        { "c":[
+        {"c":[
             {"f":"YES","v":true},
             {"v":15.6},
             {"f":"Foo Bar","p":{"display":"none"},"v":"foobar"}
         ]},
-        { "c":[
+        {"c":[
             {"v":true},
             {"v":15.6},
             {"f":"Foo Bar","v":"foobar"}
@@ -55,7 +55,7 @@ is(
 
 is(
 	$datatable->output_json(),
-	q!{"cols": [{"id":"bool","label":"True or False","type":"boolean"},{"id":"number","label":"Number","type":"number"},{"id":"string","label":"Some String","p":{"display":"none"},"type":"string"}],"rows": [{ "c":[{"f":"YES","v":true},{"v":15.6},{"f":"Foo Bar","p":{"display":"none"},"v":"foobar"}]},{ "c":[{"v":true},{"v":15.6},{"f":"Foo Bar","v":"foobar"}]}]}!,
+	q!{"cols": [{"id":"bool","label":"True or False","type":"boolean"},{"id":"number","label":"Number","type":"number"},{"id":"string","label":"Some String","p":{"display":"none"},"type":"string"}],"rows": [{"c":[{"f":"YES","v":true},{"v":15.6},{"f":"Foo Bar","p":{"display":"none"},"v":"foobar"}]},{"c":[{"v":true},{"v":15.6},{"f":"Foo Bar","v":"foobar"}]}]}!,
 	"Compact JSON rendering matches"
 );
 
@@ -66,10 +66,10 @@ is(
         {"id":"bool","label":"True or False","type":"boolean"}
     ],
     "rows": [
-        { "c":[
+        {"c":[
             {"f":"YES","v":true}
         ]},
-        { "c":[
+        {"c":[
             {"v":true}
         ]}
     ]
@@ -85,7 +85,7 @@ $datatable2
 
 is(
 	$datatable2->output_json(),
-	q!{"cols": [{"type":"string"},{"label":"hits","type":"number"}],"rows": [{ "c":[{"v":"One"},{"v":1}]},{ "c":[{"v":"Two"},{"f":"2t","v":2}]}]}!,
+	q!{"cols": [{"type":"string"},{"label":"hits","type":"number"}],"rows": [{"c":[{"v":"One"},{"v":1}]},{"c":[{"v":"Two"},{"f":"2t","v":2}]}]}!,
 	"Everything works without IDs"
 );
 

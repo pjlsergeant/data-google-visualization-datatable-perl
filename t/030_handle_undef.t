@@ -4,7 +4,7 @@ use strict;
 use warnings;
 use Data::Google::Visualization::DataTable;
 
-use Test::More tests => 4;
+use Test::More tests => 1;
 
 my $datatable = Data::Google::Visualization::DataTable->new();
 
@@ -31,7 +31,7 @@ $datatable->add_rows(
 
 is(
 	$datatable->output_json(),
-	q!{"cols": [{"id":"bool","label":"True or False","type":"boolean"},{"id":"number","label":"Number","type":"number"},{"id":"string","label":"Some String","p":{"display":"none"},"type":"string"}],"rows": [{ "c":[{"f":"YES","v":null},{"v":null},{"f":"Foo Bar","p":{"display":"none"},"v":null}]},{ "c":[{"v":null},{"v":null},{"f":"Foo Bar","v":null}]}]}!,
+	q!{"cols": [{"id":"bool","label":"True or False","type":"boolean"},{"id":"number","label":"Number","type":"number"},{"id":"string","label":"Some String","p":{"display":"none"},"type":"string"}],"rows": [{"c":[{"f":"YES","v":null},{"v":null},{"v":null}]},{"c":[{"v":null},{"v":null},{"f":"Foo Bar","v":null}]}]}!,
 	"Compact JSON rendering matches"
 );
 
