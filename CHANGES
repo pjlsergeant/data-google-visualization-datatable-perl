@@ -1,3 +1,5 @@
+0.06  Wed Nov 10 20:00:00 2010
+	- Added proper handling of nulls in response to https://rt.cpan.org/Ticket/Display.html?id=62899
 0.05  Sun Mar 28 15:00:00 2010
 	- Handled non-defined or blank-string zero values better as numbers
 0.04  Sun Mar 28 11:20:00 2010

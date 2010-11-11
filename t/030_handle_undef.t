@@ -2,7 +2,6 @@
 
 use strict;
 use warnings;
-use Test::Warn;
 use Data::Google::Visualization::DataTable;
 
 use Test::More tests => 1;
