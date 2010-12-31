@@ -81,13 +81,13 @@ familiar with L<Perl references|perlreftut> and L<Perl objects|perlboot>.>
  # Get the data...
 
  # Fancy-pants
- my $output = $self->output_json(
+ my $output = $datatable->output_json(
  	columns => ['date','number','string' ],
  	pretty  => 1,
  );
 
  # Vanilla
- my $output = $self->output_json();
+ my $output = $datatable->output_json();
 
 =head1 COLUMNS, ROWS AND CELLS
 
