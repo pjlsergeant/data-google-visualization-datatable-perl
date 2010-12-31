@@ -1,3 +1,6 @@
+0.07  Fri Dec 21 10:30:00 2010
+	- Overhaul of how properties are handled (https://rt.cpan.org/Ticket/Display.html?id=64356) - thanks to Matthew Darwin
+	- Small documentation patch (https://rt.cpan.org/Ticket/Display.html?id=64355)
 0.06  Wed Nov 10 20:00:00 2010
 	- Added proper handling of nulls in response to https://rt.cpan.org/Ticket/Display.html?id=62899
 0.05  Sun Mar 28 15:00:00 2010

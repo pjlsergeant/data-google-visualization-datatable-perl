@@ -11,7 +11,7 @@ BEGIN {
 	plan skip_all => "Test::Exception needed for these tests" if $@;
 }
 
-plan tests => 9;
+plan tests => 8;
 
 # Add a column, add a row, then add another column
 {
@@ -51,11 +51,6 @@ plan tests => 9;
 # Nonsense column p
 {
 	my $datatable = Data::Google::Visualization::DataTable->new();
-	throws_ok
-		{ $datatable->add_columns( { type => 'string', p => 'faulty' } ) }
-		qr/'p' must be a reference/,
-		"String 'p' for column caught";
-
 	my $circular = [];
 	push(@$circular, $circular);
 	weaken $circular;

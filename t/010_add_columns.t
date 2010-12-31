@@ -2,9 +2,10 @@
 
 use strict;
 use warnings;
+use JSON::XS;
 use Data::Google::Visualization::DataTable;
 
-use Test::More tests => 4;
+use Test::More tests => 6;
 
 my $datatable = Data::Google::Visualization::DataTable->new();
 
@@ -38,16 +39,20 @@ is(
         {"id":"string","label":"Some String","p":{"display":"none"},"type":"string"}
     ],
     "rows": [
-        {"c":[
-            {"f":"YES","v":true},
-            {"v":15.6},
-            {"f":"Foo Bar","p":{"display":"none"},"v":"foobar"}
-        ]},
-        {"c":[
-            {"v":true},
-            {"v":15.6},
-            {"f":"Foo Bar","v":"foobar"}
-        ]}
+        {
+            "c":[
+                {"f":"YES","v":true},
+                {"v":15.6},
+                {"f":"Foo Bar","p":{"display":"none"},"v":"foobar"}
+            ]
+        },
+        {
+            "c":[
+                {"v":true},
+                {"v":15.6},
+                {"f":"Foo Bar","v":"foobar"}
+            ]
+        }
     ]
 }!,
 	"Pretty JSON rendering matches"
@@ -66,16 +71,47 @@ is(
         {"id":"bool","label":"True or False","type":"boolean"}
     ],
     "rows": [
-        {"c":[
-            {"f":"YES","v":true}
-        ]},
-        {"c":[
-            {"v":true}
-        ]}
+        {
+            "c":[
+                {"f":"YES","v":true}
+            ]
+        },
+        {
+            "c":[
+                {"v":true}
+            ]
+        }
     ]
 }!,
 	"Specific column rendering works"
 );
+
+# Round-trip the JSON output...
+my $reference = {
+	cols => [
+		{ id => 'bool',   label => 'True or False', type => 'boolean'},
+		{ id => 'number', label => 'Number',        type => 'number' },
+		{ id => 'string', label => 'Some String',   type => 'string',
+			p => { display => 'none' } },
+	],
+	rows => [
+		{ c => [
+			{ f => 'YES', v => bless( do{\(my $o = 1)}, 'JSON::XS::Boolean') },
+			{ v => 15.6 },
+			{ f => 'Foo Bar', v => 'foobar', p => { display => 'none' } }
+		] },
+		{ c => [
+			{ v => bless( do{\(my $o = 1)}, 'JSON::XS::Boolean') },
+			{ v => 15.6 },
+			{ f => 'Foo Bar', v => 'foobar' }
+		] }
+	]
+};
+
+my $normal_output = decode_json( $datatable->output_json() );
+is_deeply( $normal_output, $reference, "Round-trip works with concise output");
+my $pretty_output = decode_json( $datatable->output_json( pretty => 1 ) );
+is_deeply( $pretty_output, $reference, "Round-trip works with pretty output");
 
 # Label-less example
 my $datatable2 = Data::Google::Visualization::DataTable->new();
