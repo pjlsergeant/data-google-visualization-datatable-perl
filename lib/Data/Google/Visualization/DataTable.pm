@@ -81,13 +81,13 @@ familiar with L<Perl references|perlreftut> and L<Perl objects|perlboot>.>
  # Get the data...
 
  # Fancy-pants
- my $output = $self->output_json(
+ my $output = $datatable->output_json(
  	columns => ['date','number','string' ],
  	pretty  => 1,
  );
 
  # Vanilla
- my $output = $self->output_json();
+ my $output = $datatable->output_json();
 
 =head1 COLUMNS, ROWS AND CELLS
 
@@ -590,6 +590,14 @@ Find a reproducible bug, file a bug report, and I (Peter Sergeant) will donate
 $10 to The Perl Foundation (or Wikipedia). Feature Requests are not bugs :-)
 Offer subject to author's discretion...
 
+$10 donated 11Nov2010 to TPF re L<null display bug|https://rt.cpan.org/Ticket/Display.html?id=62899>
+
+=head1 SUPPORT
+
+If you find a bug, please use 
+L<this modules page on the CPAN bug tracker|https://rt.cpan.org/Ticket/Create.html?Queue=Data-Google-Visualization-DataTable>
+to raise it, or I might never see.
+
 =head1 AUTHOR
 
 Peter Sergeant C<pete@clueball.com> on behalf of
@@ -603,6 +611,8 @@ L<Python library that does the same thing|http://code.google.com/p/google-visual
 L<JSON::XS> - The underlying module
 
 L<Google Visualization API|http://code.google.com/apis/visualization/documentation/reference.html#dataparam>.
+
+L<Github Page for this code|https://github.com/sheriff/data-google-visualization-datatable-perl>
 
 =head1 COPYRIGHT
 
