@@ -190,9 +190,9 @@ our %JAVASCRIPT_RESERVED = map { $_ => 1 } qw(
 	break case catch continue default delete do else finally for function if in
 	instanceof new return switch this throw try typeof var void while with
 	abstract boolean byte char class const debugger double enum export extends
-	final float goto implements import int interface long native package private
-	protected public short static super synchronized throws transient volatile
-	const export import
+	final float goto implements import int interface long native package
+	private protected public short static super synchronized throws transient
+	volatile const export import
 );
 
 sub add_columns {
