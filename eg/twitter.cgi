@@ -48,7 +48,7 @@ for my $twitter_name ( @tweeters ) {
 	$dt->add_rows( $row );
 }
 
-my $data = $dt->output_json( pretty => 1 );
+my $data = $dt->output_javascript( pretty => 1 );
 
 print "Content-type: text/html\n\n";
 Template->new->process( $template, { data => $data } );

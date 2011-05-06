@@ -31,7 +31,7 @@ $datatable->add_rows(
 );
 
 is(
-	$datatable->output_json( pretty => 1 ),
+	$datatable->output_javascript( pretty => 1 ),
 	q!{
     "cols": [
         {"id":"bool","label":"True or False","type":"boolean"},
@@ -55,17 +55,17 @@ is(
         }
     ]
 }!,
-	"Pretty JSON rendering matches"
+	"Pretty Javascript rendering matches"
 );
 
 is(
-	$datatable->output_json(),
+	$datatable->output_javascript(),
 	q!{"cols": [{"id":"bool","label":"True or False","type":"boolean"},{"id":"number","label":"Number","type":"number"},{"id":"string","label":"Some String","p":{"display":"none"},"type":"string"}],"rows": [{"c":[{"f":"YES","v":true},{"v":15.6},{"f":"Foo Bar","p":{"display":"none"},"v":"foobar"}]},{"c":[{"v":true},{"v":15.6},{"f":"Foo Bar","v":"foobar"}]}]}!,
-	"Compact JSON rendering matches"
+	"Compact Javascript rendering matches"
 );
 
 is(
-	$datatable->output_json( pretty => 1, columns => ['bool'] ),
+	$datatable->output_javascript( pretty => 1, columns => ['bool'] ),
 	q!{
     "cols": [
         {"id":"bool","label":"True or False","type":"boolean"}
@@ -86,7 +86,7 @@ is(
 	"Specific column rendering works"
 );
 
-# Round-trip the JSON output...
+# Round-trip the Javascript output...
 my $reference = {
 	cols => [
 		{ id => 'bool',   label => 'True or False', type => 'boolean'},
@@ -108,9 +108,9 @@ my $reference = {
 	]
 };
 
-my $normal_output = decode_json( $datatable->output_json() );
+my $normal_output = decode_json( $datatable->output_javascript() );
 is_deeply( $normal_output, $reference, "Round-trip works with concise output");
-my $pretty_output = decode_json( $datatable->output_json( pretty => 1 ) );
+my $pretty_output = decode_json( $datatable->output_javascript( pretty => 1 ) );
 is_deeply( $pretty_output, $reference, "Round-trip works with pretty output");
 
 # Label-less example
@@ -120,7 +120,7 @@ $datatable2
 	->add_rows( [ 'One', 1 ], ['Two', { v => 2, f => '2t' } ] );
 
 is(
-	$datatable2->output_json(),
+	$datatable2->output_javascript(),
 	q!{"cols": [{"type":"string"},{"label":"hits","type":"number"}],"rows": [{"c":[{"v":"One"},{"v":1}]},{"c":[{"v":"Two"},{"f":"2t","v":2}]}]}!,
 	"Everything works without IDs"
 );

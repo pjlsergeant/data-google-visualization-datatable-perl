@@ -33,7 +33,7 @@ $datatable->add_rows({ number => 0 });
 $datatable->add_rows([ undef, 1 ]);
 
 is(
-	$datatable->output_json(),
+	$datatable->output_javascript(),
 	q!{"cols": [{"id":"bool","label":"True or False","type":"boolean"},{"id":"number","label":"Number","type":"number"},{"id":"string","label":"Some String","p":{"display":"none"},"type":"string"}],"rows": [{"c":[{"f":"YES","v":null},{"v":null},{"v":null}]},{"c":[{"v":null},{"v":null},{"f":"Foo Bar","v":null}]},{"c":[{"v":null},{"v":0},{"v":null}]},{"c":[{"v":null},{"v":1},{"v":null}]}]}!
 );
 

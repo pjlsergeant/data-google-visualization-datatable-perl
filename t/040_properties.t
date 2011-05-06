@@ -20,7 +20,7 @@ $datatable->add_rows({
 
 
 is(
-	$datatable->output_json( pretty => 1 ),
+	$datatable->output_javascript( pretty => 1 ),
 q!{
     "cols": [
         {"id":"bool","label":"bool","p":["mad",{"vampires":"evade"}],"type":"boolean"}
@@ -40,7 +40,7 @@ q!{
 $datatable->set_properties( undef );
 
 is(
-	$datatable->output_json( pretty => 1 ),
+	$datatable->output_javascript( pretty => 1 ),
 q!{
     "cols": [
         {"id":"bool","label":"bool","p":["mad",{"vampires":"evade"}],"type":"boolean"}
@@ -59,7 +59,7 @@ q!{
 $datatable->set_properties( { 'no' => 'protest' } );
 
 is(
-	$datatable->output_json( pretty => 1 ),
+	$datatable->output_javascript( pretty => 1 ),
 q!{
     "cols": [
         {"id":"bool","label":"bool","p":["mad",{"vampires":"evade"}],"type":"boolean"}
