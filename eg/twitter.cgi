@@ -15,7 +15,7 @@ use Data::Google::Visualization::DataTable;
 my $template = 'eg/twitter.tt2';
 my @tweeters = qw( PlanetPerl shadowcat_mst perl_api );
 
-my $dt = Data::Google::Visualization::DataTable->new();
+my $dt = Data::Google::Visualization::DataTable->new({ with_timezone => 1 });
 $dt->add_columns(
 	{ id => 'name',       label => 'Name',         type => 'string'    },
 	{ id => 'followers',  label => 'Followers',    type => 'number'    },

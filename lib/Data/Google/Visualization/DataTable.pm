@@ -126,7 +126,8 @@ directly to the resulting Javascript Date object eg:
  JS:
   new Date( 5, 4, 3 )
 
-Remember that JS dates 0-index the month.
+Remember that JS dates 0-index the month. B<Make sure you read the sections on
+Dates and Times below if you want any chance of doing this right>...
 
 For non-date fields, if you specify a cell using a string or number, rather than
 a hashref, that'll be mapped to a cell with C<v> set to the string you
@@ -151,15 +152,19 @@ for defining properties.
 
 =head2 new
 
-Constructor. Accepts a hashref of arguments, of which the only valid one
-currently is C<p> - a datatable-wide properties element (see C<Properties> above
-and the Google docs).
+Constructor. Accepts a hashref of arguments:
+
+C<p> -  a datatable-wide properties element (see C<Properties> above and the
+Google docs).
+
+C<with_timezone> - defaults to false. An experimental feature for doing dates
+the right way. See: L<DATES AND TIMES> for discussion below.
 
 =cut
 
 sub new {
 	my $class = shift;
-	my $args  = shift;
+	my $args  = shift || {};
 	my $self = {
 		columns              => [],
 		column_mapping       => {},
@@ -167,7 +172,8 @@ sub new {
 		json_xs              => JSON::XS->new()->canonical(1)->allow_nonref,
 		all_columns_have_ids => 0,
 		column_count         => 0,
-		pedantic             => 1
+		pedantic             => 1,
+		with_timezone        => ($args->{'with_timezone'} || 0)
 	};
 	$self->{'properties'} = $args->{'p'} if defined $args->{'p'};
 	bless $self, $class;
@@ -434,6 +440,7 @@ sub add_rows {
 					if (! ref( $cell->{'v'} ) ) {
 						my ($sec,$min,$hour,$mday,$mon,$year) =
 							localtime( $cell->{'v'} );
+						$year += 1900;
 						@initial_date_digits =
 							( $year, $mon, $mday, $hour, $min, $sec );
 
@@ -441,7 +448,7 @@ sub add_rows {
 						my $dt = $cell->{'v'};
 						@initial_date_digits = (
 							$dt->year, ( $dt->mon - 1 ), $dt->day,
-							$dt->hour, $dt->min, $dt->sec, $dt->millisecond
+							$dt->hour, $dt->min, $dt->sec
 						);
 
 					} elsif ( $cell->{'v'}->isa('Time::Piece') ) {
@@ -460,7 +467,7 @@ sub add_rows {
 					} elsif ( $type eq 'datetime' ) {
 						@date_digits = @initial_date_digits[ 0 .. 5 ];
 					} else { # Time of day
-						@date_digits = @initial_date_digits[ 3, -1 ];
+						@date_digits = @initial_date_digits[ 3 .. 5 ];
 					}
 				}
 
@@ -469,6 +476,19 @@ sub add_rows {
 					$json_date = '[' . $json_date . ']';
 				} else {
 					$json_date = 'new Date( ' . $json_date . ' )';
+				}
+
+				# Actually, having done all this, timezone hack date...
+				if (
+					$self->{'with_timezone'} &&
+					ref ( $cell->{'v'} )     &&
+					ref ( $cell->{'v'} ) ne 'ARRAY' &&
+					$cell->{'v'}->isa('DateTime') &&
+					( $type eq 'date' || $type eq 'datetime' )
+				) {
+					$json_date = 'new Date("' .
+						$cell->{'v'}->strftime('%a, %d %b %Y %H:%M:%S GMT%z') .
+						'")';
 				}
 
 				my $placeholder = '%%%PLEHLDER%%%';
@@ -672,6 +692,63 @@ the Date object. That means we output code like:
  {"v":new Date( 2011, 2, 21, 2, 6, 25 )}
 
 which is valid Javascript, but not valid JSON.
+
+=head1 DATES AND TIMES
+
+Dates are one of the reasons this module is needed at all - Google's API in
+theory accepts Date objects, rather than a JSON equivalent of it. However,
+given:
+
+ new Date( 2011, 2, 21, 2, 6, 25 )
+
+in Javascript, what timezone is that? If you guessed UTC because that would be
+The Right Thing To Do, sadly you guessed wrong - it's actually set in the
+timezone of the client. And as you don't know what the client's timezone is,
+if you're going to actually use this data for anything other than display to
+that user, you're a little screwed.
+
+Even if we don't attempt to rescue that, if you pass in an Epoch timestamp, I
+have no idea which timezone you want me to use to convert that in to the above.
+We started off using C<localtime>, which shows I hadn't really thought about it,
+and will continue to use it for backwards compatibility, but:
+
+B<Don't pass this module epoch time stamps>. Either do the conversion in your
+code using C<localtime> or C<gmtime>, or pass in a L<DateTime> object whose
+C<<->hour>> and friends return the right thing.
+
+We accept four types of date input, and this is how we handle each one:
+
+=head2 epoch seconds
+
+We use C<localtime>, and then drop the returned fields straight in to a call to
+C<new Date()> in JS.
+
+=head2 DateTime and Time::Piece
+
+We use whatever's being returned by C<hour>, C<min> and C<sec>. Timezone messin'
+in the object itself to get the output you want is left to you.
+
+=head2 Raw values
+
+We stick it straight in as you specified it.
+
+=head2 ... and one more thing
+
+So it is actually possible - although a PITA - to create a Date object in
+Javascript using C<Date.parse()> which has an offset. In theory, all browsers
+should support dates in L<RFC 2822's format|http://tools.ietf.org/html/rfc2822#page-14>:
+
+ Thu, 01 Jan 1970 00:00:00 GMT-0400
+
+If you're thinking L<trolololo|http://www.youtube.com/watch?v=32UGD0fV45g> at
+this point, you're on the right track...
+
+So here's the deal: B<IF> you specify C<with_timezone> to this module's C<new>
+AND you pass in a L<DateTime> object, you'll get dates like:
+
+ new Date("Thu, 01 Jan 1970 00:00:00 GMT-0400")
+
+in your output.
 
 =head1 BUG BOUNTY
 

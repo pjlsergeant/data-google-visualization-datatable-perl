@@ -1,3 +1,6 @@
+0.09  Mon Sep 03 21:00:00 2012
+	- Date bug: https://rt.cpan.org/Ticket/Display.html?id=79374
+	- General date cleanup, including allowing timezones, + docs
 0.08  Fri May 06 10:45:00 2011
 	- Documentation patch to make it clear we're outputting Javascript, not JSON
 0.07  Fri Dec 21 10:30:00 2010
