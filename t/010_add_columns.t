@@ -14,19 +14,20 @@ $datatable->add_columns(
 	{ id => 'number',   label => "Number",        type => 'number' },
 	{ id => 'string',   label => "Some String",   type => 'string',
 		p => { display => 'none' } },
+
 );
 
 $datatable->add_rows(
- # Add as array-refs
- 	[
- 		{ v => 1, f => 'YES' },
- 		15.6,
- 		{ v => 'foobar', f => 'Foo Bar', p => { display => 'none' } },
+	# Add as array-refs
+	[
+		{ v => 1, f => 'YES' },
+		15.6,
+		{ v => 'foobar', f => 'Foo Bar', p => { display => 'none' } },
 	],
 	{
- 		bool      => 1,
- 		number    => 15.6,
- 		string    => { v => 'foobar', f => 'Foo Bar' },
+		bool      => 1,
+		number    => 15.6,
+		string    => { v => 'foobar', f => 'Foo Bar' },
 	},
 );
 
@@ -124,6 +125,3 @@ is(
 	q!{"cols": [{"type":"string"},{"label":"hits","type":"number"}],"rows": [{"c":[{"v":"One"},{"v":1}]},{"c":[{"v":"Two"},{"f":"2t","v":2}]}]}!,
 	"Everything works without IDs"
 );
-
-
-

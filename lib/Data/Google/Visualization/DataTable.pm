@@ -46,35 +46,35 @@ familiar with L<Perl references|perlreftut> and L<Perl objects|perlboot>.>
  my $datatable = Data::Google::Visualization::DataTable->new();
 
  $datatable->add_columns(
- 	{ id => 'date',     label => "A Date",        type => 'date', p => {}},
- 	{ id => 'datetime', label => "A Datetime",    type => 'datetime' },
- 	{ id => 'timeofday',label => "A Time of Day", type => 'timeofday' },
- 	{ id => 'bool',     label => "True or False", type => 'boolean' },
- 	{ id => 'number',   label => "Number",        type => 'number' },
- 	{ id => 'string',   label => "Some String",   type => 'string' },
+	{ id => 'date',     label => "A Date",        type => 'date', p => {}},
+	{ id => 'datetime', label => "A Datetime",    type => 'datetime' },
+	{ id => 'timeofday',label => "A Time of Day", type => 'timeofday' },
+	{ id => 'bool',     label => "True or False", type => 'boolean' },
+	{ id => 'number',   label => "Number",        type => 'number' },
+	{ id => 'string',   label => "Some String",   type => 'string' },
  );
 
  $datatable->add_rows(
 
  # Add as array-refs
- 	[
- 		{ v => DateTime->new() },
- 		{ v => Time::Piece->new(), f => "Right now!" },
- 		{ v => [6, 12, 1], f => '06:12:01' },
- 		{ v => 1, f => 'YES' },
- 		15.6, # If you're getting lazy
- 		{ v => 'foobar', f => 'Foo Bar', p => { display => 'none' } },
- 	],
+	[
+		{ v => DateTime->new() },
+		{ v => Time::Piece->new(), f => "Right now!" },
+		{ v => [6, 12, 1], f => '06:12:01' },
+		{ v => 1, f => 'YES' },
+		15.6, # If you're getting lazy
+		{ v => 'foobar', f => 'Foo Bar', p => { display => 'none' } },
+	],
 
  # And/or as hash-refs (but only if you defined id's for each of your columns)
- 	{
- 		date      => DateTime->new(),
- 		datetime  => { v => Time::Piece->new(), f => "Right now!" },
- 		timeofday => [6, 12, 1],
- 		bool      => 1,
- 		number    => 15.6,
- 		string    => { v => 'foobar', f => 'Foo Bar' },
- 	},
+	{
+		date      => DateTime->new(),
+		datetime  => { v => Time::Piece->new(), f => "Right now!" },
+		timeofday => [6, 12, 1],
+		bool      => 1,
+		number    => 15.6,
+		string    => { v => 'foobar', f => 'Foo Bar' },
+	},
 
  );
 
@@ -82,8 +82,8 @@ familiar with L<Perl references|perlreftut> and L<Perl objects|perlboot>.>
 
  # Fancy-pants
  my $output = $datatable->output_javascript(
- 	columns => ['date','number','string' ],
- 	pretty  => 1,
+	columns => ['date','number','string' ],
+	pretty  => 1,
  );
 
  # Vanilla

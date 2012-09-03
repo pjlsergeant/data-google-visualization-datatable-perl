@@ -17,15 +17,15 @@ $datatable->add_columns(
 
 $datatable->add_rows(
  # Add as array-refs
- 	[
- 		{ v => undef, f => 'YES' },
- 		undef,
- 		undef
+	[
+		{ v => undef, f => 'YES' },
+		undef,
+		undef
 	],
 	{
- 		bool      => undef,
- 		number    => undef,
- 		string    => { v => undef, f => 'Foo Bar' },
+		bool      => undef,
+		number    => undef,
+		string    => { v => undef, f => 'Foo Bar' },
 	},
 );
 
