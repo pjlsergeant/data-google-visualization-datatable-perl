@@ -5,7 +5,6 @@ use warnings;
 
 use Carp qw(croak carp);
 use Storable qw(dclone);
-use JSON::XS;
 use Time::Local;
 
 =head1 NAME
@@ -152,13 +151,21 @@ for defining properties.
 
 =head2 new
 
-Constructor. Accepts a hashref of arguments:
+Constructor. B<In 99% of cases, you really don't need to provide any options at
+all to the constructor>. Accepts a hashref of arguments:
 
 C<p> -  a datatable-wide properties element (see C<Properties> above and the
 Google docs).
 
 C<with_timezone> - defaults to false. An experimental feature for doing dates
 the right way. See: L<DATES AND TIMES> for discussion below.
+
+C<json_object> - optional, and defaults to a sensibly configured L<JSON::XS>
+object. If you really want to avoid using L<JSON::XS> for some reason, you can
+pass in something else here that supports an C<encode> method (and also avoid
+loading L<JSON::XS> at all, as we lazy-load it). If you just want to configure
+the L<JSON::XS> object we use, consider using the C<json_xs_object> method
+specified below instead. B<tl;dr: ignore this option>.
 
 =cut
 
@@ -169,15 +176,26 @@ sub new {
 		columns              => [],
 		column_mapping       => {},
 		rows                 => [],
-		json_xs              => JSON::XS->new()->canonical(1)->allow_nonref,
 		all_columns_have_ids => 0,
 		column_count         => 0,
 		pedantic             => 1,
 		with_timezone        => ($args->{'with_timezone'} || 0)
 	};
-	$self->{'properties'} = $args->{'p'} if defined $args->{'p'};
 	bless $self, $class;
+
+	$self->{'properties'} = $args->{'p'} if defined $args->{'p'};
+	$self->{'json_xs'} = $args->{'json_object'} ||
+		$self->_create_json_xs_object();
+
 	return $self;
+}
+
+# We don't actually need JSON::XS, and in fact, there's a user who'd rather we
+# didn't insist on it, so we lazy load both the class and our object
+sub _create_json_xs_object {
+	my $self = shift;
+	require JSON::XS;
+	return JSON::XS->new()->canonical(1)->allow_nonref;
 }
 
 =head2 add_columns

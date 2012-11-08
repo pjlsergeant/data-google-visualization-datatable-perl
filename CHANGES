@@ -1,3 +1,5 @@
+0.10  Thu Nov 08 06:50:00 2012
+	- Allowed complete bypass of JSON::XS after response to use request
 0.09  Mon Sep 03 21:00:00 2012
 	- Date bug: https://rt.cpan.org/Ticket/Display.html?id=79374
 	- General date cleanup, including allowing timezones, + docs
