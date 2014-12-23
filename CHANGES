@@ -1,3 +1,7 @@
+0.11  Tue Dec 23 14:35:00 2014
+	- Pass-through milliseconds if they exist in the DateTime object, with
+	  reference to a patch by torstein@visena.com,
+	  (https://rt.cpan.org/Ticket/Display.html?id=98775)
 0.10  Thu Nov 08 06:50:00 2012
 	- Allowed complete bypass of JSON::XS after response to use request
 0.09  Mon Sep 03 21:00:00 2012

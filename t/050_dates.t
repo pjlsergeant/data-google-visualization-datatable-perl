@@ -46,6 +46,22 @@ for my $test (
 		},
 	},
 	{
+		name => 'DateTime with ms',
+		input => sub {
+			my $dt = DateTime->from_epoch( epoch => $timestamp );
+			$dt->set_nanosecond( 500_000_000 );
+			$dt->set_time_zone( 'Asia/Kathmandu' );
+			return $dt;
+		},
+		with_timezone => 0, # Shouldn't do any thing
+		requires => 'DateTime',
+		expected => {
+			date      => "new Date( 2012, 8, 3 )",
+			datetime  => "new Date( 2012, 8, 3, 23, 2, 51, 500 )",
+			timeofday => "[23, 2, 51, 500]"
+		},
+	},
+	{
 		name => 'DateTime with Timezone',
 		input => sub {
 			my $dt = DateTime->from_epoch( epoch => $timestamp );

@@ -453,6 +453,7 @@ sub add_rows {
 				# We're going to have to retrieve them ourselves
 				} else {
 					my @initial_date_digits;
+					my $has_milliseconds;
 
 					# Epoch timestamp
 					if (! ref( $cell->{'v'} ) ) {
@@ -466,14 +467,18 @@ sub add_rows {
 						my $dt = $cell->{'v'};
 						@initial_date_digits = (
 							$dt->year, ( $dt->mon - 1 ), $dt->day,
-							$dt->hour, $dt->min, $dt->sec
+							$dt->hour, $dt->min, $dt->sec,
 						);
+						if ( $dt->millisecond ) {
+							$has_milliseconds++;
+							push( @initial_date_digits, $dt->millisecond );
+						}
 
 					} elsif ( $cell->{'v'}->isa('Time::Piece') ) {
 						my $tp = $cell->{'v'};
 						@initial_date_digits = (
 							$tp->year, $tp->_mon, $tp->mday,
-							$tp->hour, $tp->min, $tp->sec
+							$tp->hour, $tp->min, $tp->sec,
 						);
 
 					} else {
@@ -484,8 +489,12 @@ sub add_rows {
 						@date_digits = @initial_date_digits[ 0 .. 2 ];
 					} elsif ( $type eq 'datetime' ) {
 						@date_digits = @initial_date_digits[ 0 .. 5 ];
+						push( @date_digits, $initial_date_digits[6] )
+							if $has_milliseconds;
 					} else { # Time of day
 						@date_digits = @initial_date_digits[ 3 .. 5 ];
+						push( @date_digits, $initial_date_digits[6] )
+							if $has_milliseconds;
 					}
 				}
 
